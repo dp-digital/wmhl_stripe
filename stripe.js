@@ -1,10 +1,10 @@
 const env = require('dotenv').config().parsed;
-const stripe = require('stripe')(env.STRIPE_SECRET_KEY);
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const express = require('express');
 
 const app = express();
 
-const PORT = env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 app.get('/', (req, res) => {
@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
 
 app.post('/payment-intent', async (req, res) => {
     try {
-        const AUTH_TOKEN = env.AUTH_TOKEN;
+        const AUTH_TOKEN = process.env.AUTH_TOKEN;
 
         if (!AUTH_TOKEN) {
             return res.status(500).json({ status: false, message: 'API_AUTH_TOKEN is not set' });
@@ -62,7 +62,7 @@ app.post('/payment-intent', async (req, res) => {
             status: true,
             message: {
                 data: paymentIntent,
-                secretKey: env.STRIPE_SECRET_KEY,
+                secretKey: process.env.STRIPE_SECRET_KEY,
                 clientSecret: paymentIntent.client_secret,
                 ephemeralKey: ephemeralKey.secret,
                 customerId: customerId
